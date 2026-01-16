@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
+   "scripts": {
     "dev": "vite",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
