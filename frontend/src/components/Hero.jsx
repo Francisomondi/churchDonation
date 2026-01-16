@@ -39,7 +39,7 @@ export default function Hero({ onDonate }) {
               onClick={onDonate}
               className="bg-white text-emerald-700 px-8 py-3 rounded-full font-semibold shadow-lg hover:scale-105 transition-transform"
             >
-              🙏 Give via M-Pesa
+              🙏 Give Unto the Lord
             </button>
 
             <button

@@ -6,7 +6,7 @@ const seasons = {
   Ordinary: "Green",
 };
 
-export default function CatholicCalendar() {
+export default function CatholicCalender() {
   const today = new Date().toDateString();
 
   return (
