@@ -10,6 +10,14 @@ export default defineConfig({
     react(),              // keep this if you're using React/Vue/...
     tailwindcss(),        // ← add this line
   ],
+    server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+      },
+      
+    },
+  },
    build: {
     outDir: "dist",
     emptyOutDir: true,
