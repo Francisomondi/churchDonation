@@ -10,4 +10,8 @@ export default defineConfig({
     react(),              // keep this if you're using React/Vue/...
     tailwindcss(),        // ← add this line
   ],
+   build: {
+    outDir: "dist",
+    emptyOutDir: true,
+  },
 })
