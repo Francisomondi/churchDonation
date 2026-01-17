@@ -10,9 +10,12 @@ import DonateModal from "../components/DonationModal.jsx";
 import FloatingDonate from "../components/FloatingDonate.jsx";
 import WeeklyActivities from "../components/WeeklyActivities.jsx";
 import ChurchGallery from "../components/ChurchGallery.jsx";
+import MassCountdown from "../components/MassCountdown";
+import CharityActivities from "../components/CharityActivities";
 
 export default function Home() {
   const [showDonate, setShowDonate] = useState(false);
+   const [selectedCause, setSelectedCause] = useState(null);
 
   // Lock background scroll when modal is open
   useEffect(() => {
@@ -23,12 +26,19 @@ export default function Home() {
   const openDonate = () => setShowDonate(true);
   const closeDonate = () => setShowDonate(false);
 
+  const handleDonate = (cause = null) => {
+    setSelectedCause(cause);
+    setShowDonate(true);
+  };
+
   return (
     <>
       <Navbar onDonate={openDonate} />
       <Hero onDonate={openDonate} />
+      <MassCountdown />
       <FloatingDonate onDonate={openDonate} />
-      <WeeklyActivities />   
+      <WeeklyActivities />
+      <CharityActivities onDonate={handleDonate} />   
       <AboutChurch />
       <ChurchGallery />
       <DonationTypes />
