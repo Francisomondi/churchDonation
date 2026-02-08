@@ -1,17 +1,22 @@
-// 3. Configure vite.config.ts / vite.config.js
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// vite.config.ts
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react' // ← if you're using React
-import tailwindcss from '@tailwindcss/vite'
-
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),              // keep this if you're using React/Vue/...
-    tailwindcss(),        // ← add this line
-  ],
-   build: {
+  plugins: [react()],
+ 
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+      },
+      
+    },
+  },
+  
+  
+  build: {
     outDir: "dist",
     emptyOutDir: true,
   },
-})
+});
