@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import axiosInstance from "../../lib/axios";
 
 export default function DonateModal({ onClose, cause }) {
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ export default function DonateModal({ onClose, cause }) {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/donation/stkpush", form);
+      const res = await axiosInstance.post("/api/donation/stkpush", form);
       toast.success("📲 STK Push sent! Check your phone.");
       console.log(res.data); // optional: view donation + MPESA response
       onClose();
