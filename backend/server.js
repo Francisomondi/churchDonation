@@ -5,16 +5,16 @@ import connectDB from "./config/db.js";
 import donationRoutes from "./routes/donation.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
 import path from "path";
-
+import { fileURLToPath } from "url";
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-// ESM dirname fix
-
-const __dirname = path.resolve();
+// ✅ Proper __dirname for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(cors());
@@ -25,20 +25,19 @@ app.set("trust proxy", 1);
 // API routes
 app.use("/api/donation", donationRoutes);
 
+// Serve frontend in production
 if (process.env.NODE_ENV === "production") {
   const frontendPath = path.join(__dirname, "../frontend/dist");
+
   app.use(express.static(frontendPath));
 
+  // SPA fallback (MUST be last before error handler)
   app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-});
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
 }
 
-
-app.use("/api/donation", donationRoutes);
-
-
-// Error handler (always last)
+// Error handler (ALWAYS last)
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
