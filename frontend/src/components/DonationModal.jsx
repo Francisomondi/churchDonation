@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
 import axiosInstance from "../../lib/axios";
 
@@ -25,11 +24,13 @@ export default function DonateModal({ onClose, cause }) {
       console.log(res.data); // optional: view donation + MPESA response
       onClose();
     } catch (err) {
-      toast.error("❌ Failed to initiate payment");
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
+        const msg =
+        err.response?.data?.message ||
+        "Payment request failed. Please try again.";
+
+        toast.error(msg);
+        console.error(err);
+      }
   };
 
   return (
