@@ -5,7 +5,7 @@ import connectDB from "./config/db.js";
 import donationRoutes from "./routes/donation.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
 import path from "path";
-import { fileURLToPath } from "url";
+
 
 dotenv.config();
 connectDB();
@@ -13,8 +13,8 @@ connectDB();
 const app = express();
 
 // ESM dirname fix
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
+const __dirname = path.resolve();
 
 // Middleware
 app.use(cors());
@@ -29,9 +29,9 @@ if (process.env.NODE_ENV === "production") {
   const frontendPath = path.join(__dirname, "../frontend/dist");
   app.use(express.static(frontendPath));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
+  app.use((req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+});
 }
 
 
