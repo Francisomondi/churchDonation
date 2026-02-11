@@ -7,11 +7,12 @@ function App() {
     <Home />
     <Toaster
         position="top-center"
-        autoClose={4000}
+        autoClose={5000}
         closeOnClick
         pauseOnHover
         draggable
         theme="dark"
+        reverseOrder={false}
       />
   </>
 );
