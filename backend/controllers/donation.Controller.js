@@ -112,3 +112,17 @@ export const donationCallback = async (req, res) => {
     res.json({ ResultCode: 0, ResultDesc: "Accepted" });
   }
 };
+
+export const getDonationHistory = async (req, res) => {
+  try {
+    const { phone } = req.params;
+
+    const donations = await Donation.find({ phone })
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    res.json(donations);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch donation history" });
+  }
+};

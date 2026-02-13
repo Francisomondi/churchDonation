@@ -1,16 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import axiosInstance from "../../lib/axios";
 
 export default function DonateModal({ onClose, cause }) {
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false); // ✅ NEW
+  const [success, setSuccess] = useState(false); 
   const [form, setForm] = useState({
     type: "tithe",
     amount: "",
     phone: "",
   });
+  const [history, setHistory] = useState([]);
+
+
+  useEffect(() => {
+  const fetchHistory = async () => {
+    if (form.phone.length >= 10) {
+      try {
+        const normalized = normalizePhone(form.phone);
+        const res = await axiosInstance.get(`/api/donation/history/${normalized}`);
+        setHistory(res.data);
+      } catch (err) {
+        console.log("No history found");
+      }
+    }
+  };
+
+  fetchHistory();
+}, [form.phone]);
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -130,6 +149,28 @@ export default function DonateModal({ onClose, cause }) {
               className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
               required
             />
+            {history.length > 0 && (
+              <div className="bg-gray-50 p-3 rounded-xl mt-3">
+                <p className="text-sm font-semibold text-gray-600 mb-2">
+                  Your Recent Donations
+                </p>
+
+                <div className="space-y-2 max-h-32 overflow-y-auto">
+                  {history.map((donation) => (
+                    <div
+                      key={donation._id}
+                      className="flex justify-between text-sm bg-white p-2 rounded-lg shadow-sm"
+                    >
+                      <span>KES {donation.amount}</span>
+                      <span className="text-gray-400">
+                        {new Date(donation.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
 
             {/* Submit Button */}
             <button
