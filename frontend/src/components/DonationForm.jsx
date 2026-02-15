@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../lib/axios";
 
 export default function DonationForm() {
   const [form, setForm] = useState({
@@ -10,7 +10,7 @@ export default function DonationForm() {
   });
 
   const submit = async () => {
-    await axios.post("http://localhost:5000/api/mpesa/stk", form);
+    await axiosInstance.post("/api/mpesa/stk", form);
     alert("Check your phone to complete payment");
   };
 

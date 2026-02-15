@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import donationRoutes from "./routes/donation.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
+import adminRoutes from "./routes/admin.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -24,6 +25,7 @@ app.set("trust proxy", 1);
 
 // API routes
 app.use("/api/donation", donationRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
