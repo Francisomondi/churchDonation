@@ -16,7 +16,11 @@ const donationSchema = new mongoose.Schema(
     },
     checkoutRequestID: String,
     mpesaReceipt: String,
+    rawCallback: Object,
+    transactionDate: String,
+    resultDesc: String,
   },
+  
   { timestamps: true }
 );
 

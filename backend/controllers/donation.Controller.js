@@ -63,6 +63,7 @@ export const donate = async (req, res) => {
       phone: formattedPhone,
       amount,
       type,
+      status: "pending",
       checkoutRequestID: stkRes.data.CheckoutRequestID,
     });
 
@@ -80,36 +81,70 @@ export const donate = async (req, res) => {
 ======================= */
 export const donationCallback = async (req, res) => {
   try {
-    const callback =
-      req.body.Body.stkCallback;
+    // 1️⃣ Always acknowledge Safaricom immediately
+    res.json({ ResultCode: 0, ResultDesc: "Accepted" });
 
-    const checkoutID = callback.CheckoutRequestID;
-    const resultCode = callback.ResultCode;
-
-    if (resultCode === 0) {
-      const metadata = callback.CallbackMetadata.Item;
-
-      const receipt = metadata.find(
-        (i) => i.Name === "MpesaReceiptNumber"
-      )?.Value;
-
-      await Donation.findOneAndUpdate(
-        { checkoutRequestID: checkoutID },
-        {
-          status: "success",
-          mpesaReceipt: receipt,
-        }
-      );
-    } else {
-      await Donation.findOneAndUpdate(
-        { checkoutRequestID: checkoutID },
-        { status: "failed" }
-      );
+    // 2️⃣ Validate structure safely
+    const stkCallback = req.body?.Body?.stkCallback;
+    if (!stkCallback) {
+      console.error("Invalid callback structure", req.body);
+      return;
     }
 
-    res.json({ ResultCode: 0, ResultDesc: "Accepted" });
+    const {
+      CheckoutRequestID,
+      ResultCode,
+      ResultDesc,
+      CallbackMetadata,
+    } = stkCallback;
+
+    if (!CheckoutRequestID) {
+      console.error("Missing CheckoutRequestID");
+      return;
+    }
+
+    // 3️⃣ Find donation
+    const donation = await Donation.findOne({
+      checkoutRequestID: CheckoutRequestID,
+    });
+
+    if (!donation) {
+      console.error("Donation not found:", CheckoutRequestID);
+      return;
+    }
+
+    // 4️⃣ Prevent duplicate updates (idempotency protection)
+    if (donation.status === "success") {
+      console.log("Duplicate callback ignored:", CheckoutRequestID);
+      return;
+    }
+
+    // 5️⃣ If payment successful
+    if (ResultCode === 0) {
+      const metadataItems = CallbackMetadata?.Item || [];
+
+      const getValue = (name) =>
+        metadataItems.find((item) => item.Name === name)?.Value;
+
+      donation.status = "success";
+      donation.mpesaReceipt = getValue("MpesaReceiptNumber");
+      donation.amount = getValue("Amount") || donation.amount;
+      donation.phone = getValue("PhoneNumber") || donation.phone;
+      donation.transactionDate = getValue("TransactionDate");
+      donation.resultDesc = ResultDesc;
+
+    } else {
+      donation.status = "failed";
+      donation.resultDesc = ResultDesc;
+    }
+
+    // 6️⃣ Store raw callback for audit trail
+    donation.rawCallback = req.body;
+
+    await donation.save();
+
   } catch (error) {
-    res.json({ ResultCode: 0, ResultDesc: "Accepted" });
+    console.error("M-Pesa callback error:", error.message);
   }
 };
 
@@ -124,5 +159,21 @@ export const getDonationHistory = async (req, res) => {
     res.json(donations);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch donation history" });
+  }
+};
+
+export const checkDonationStatus = async (req, res) => {
+  
+  try {
+    const donation = await Donation.findOne({
+      checkoutRequestID: req.params.checkoutID,
+    }); 
+    if (!donation) {
+      return res.status(404).json({ error: "Donation not found" });
+    }
+    res.json({ status: donation.status });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

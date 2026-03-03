@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import axiosInstance from "../../lib/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function DonateModal({ onClose, cause }) {
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,8 @@ export default function DonateModal({ onClose, cause }) {
     phone: "",
   });
   const [history, setHistory] = useState([]);
+  const [checkoutID, setCheckoutID] = useState(null);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -28,7 +31,38 @@ export default function DonateModal({ onClose, cause }) {
   };
 
   fetchHistory();
-}, [form.phone]);
+  }, [form.phone]);
+
+  useEffect(() => {
+    if (!checkoutID) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/api/donation/status/${checkoutID}`
+        );
+
+        if (res.data.status === "success") {
+          toast.success("🎉 Donation successful!");
+          clearInterval(interval);
+
+          setTimeout(() => {
+            onClose();
+            navigate("/");
+          }, 2500);
+        }
+
+        if (res.data.status === "failed") {
+          toast.error("❌ Payment failed.");
+          clearInterval(interval);
+        }
+      } catch (err) {
+        console.error("Status check failed", err);
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [checkoutID]);
 
 
   const handleChange = (e) => {
@@ -48,7 +82,8 @@ export default function DonateModal({ onClose, cause }) {
         phone: normalizePhone(form.phone),
       };
 
-      await axiosInstance.post("/api/donation/stkpush", payload);
+     const res = await axiosInstance.post("/api/donation/stkpush", payload);
+     setCheckoutID(res.data.data.CheckoutRequestID);
 
       toast.success("📲 STK Push sent! Check your phone.");
       setSuccess(true); // ✅ show success screen
@@ -190,7 +225,7 @@ export default function DonateModal({ onClose, cause }) {
           // ✅ Success Confirmation Screen
           <div className="flex flex-col items-center justify-center py-6 space-y-4">
             <div className="text-emerald-600 text-6xl">✅</div>
-            <h2 className="text-xl font-bold text-center">STK Push Sent!</h2>
+            <h2 className="text-xl font-bold text-center">Waiting for M-Pesa confirmation...</h2>
             <p className="text-gray-500 text-center">
               Please complete the payment on your phone to finalize your donation.
             </p>
