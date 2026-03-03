@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import donationRoutes from "./routes/donation.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
 import adminRoutes from "./routes/admin.routes.js";
+import orderRoutes from "./routes/order.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -26,6 +27,7 @@ app.set("trust proxy", 1);
 // API routes
 app.use("/api/donation", donationRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {

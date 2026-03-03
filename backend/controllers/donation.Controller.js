@@ -1,6 +1,7 @@
 import axios from "axios";
 import Donation from "../models/Donation.js";
 import { formatPhone } from "../utils/phoneFormatter.js";
+import Order from "../models/Order.js";
 
 /* =======================
    ACCESS TOKEN
@@ -142,6 +143,22 @@ export const donationCallback = async (req, res) => {
     donation.rawCallback = req.body;
 
     await donation.save();
+
+      // 🟢 Create Order (only if not exists)
+  const existingOrder = await Order.findOne({
+    mpesaReceipt: donation.mpesaReceipt,
+  });
+
+  if (!existingOrder) {
+    await Order.create({
+      donorPhone: donation.phone,
+      amount: donation.amount,
+      donationType: donation.type,
+      campaign: donation.campaign,
+      mpesaReceipt: donation.mpesaReceipt,
+      checkoutRequestID: donation.checkoutRequestID,
+    });
+  }
 
   } catch (error) {
     console.error("M-Pesa callback error:", error.message);
