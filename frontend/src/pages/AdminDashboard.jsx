@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import StatusBadge from "../components/StatusBadge";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
@@ -85,7 +86,7 @@ export default function AdminDashboard() {
                 Monthly Donations
               </h2>
 
-              <div className="w-full h-[320px]">
+              <div className="w-full h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={stats.monthlyChart}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -114,6 +115,7 @@ export default function AdminDashboard() {
                     <th className="p-3 text-left">Phone</th>
                     <th className="p-3 text-left">Amount</th>
                     <th className="p-3 text-left">Type</th>
+                    <th className="p-3 text-left">Status</th>
                     <th className="p-3 text-left">Receipt</th>
                     <th className="p-3 text-left">Date</th>
                   </tr>
@@ -130,6 +132,7 @@ export default function AdminDashboard() {
                         KES {order.amount.toLocaleString()}
                       </td>
                       <td className="p-3">{order.donationType}</td>
+                       <td className="p-3"><StatusBadge status={order.status} /></td>
                       <td className="p-3">{order.mpesaReceipt}</td>
                       <td className="p-3">
                         {new Date(order.createdAt).toLocaleDateString()}
