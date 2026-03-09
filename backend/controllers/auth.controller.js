@@ -123,7 +123,7 @@ export const logout = async (req, res) => {
   
 }
 
-const verifyRefreshToken = async (refreshToken) => {
+export const verifyRefreshToken = async (refreshToken) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
