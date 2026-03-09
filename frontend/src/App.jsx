@@ -5,6 +5,9 @@ import Home from "./pages/Home";
 import AdminDashboard from "./pages/AdminDashboard";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Sermons from "./pages/Sermons";
+import Events from "./pages/Events";
+import Members from "./pages/Members";
 
 function App() {
   return (
@@ -15,6 +18,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminDashboard />} />
+         <Route path="/sermons" element={<Sermons />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/members" element={<Members />} />
       </Routes>
 
       <Toaster
