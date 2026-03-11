@@ -6,7 +6,7 @@ export default function Members() {
         Church Members
       </h1>
 
-      <div className="bg-white shadow-md rounded-lg p-6">
+      <div className=" shadow-md rounded-lg p-6">
 
         <p className="text-gray-600 mb-6">
           Registered members of St. Mary’s Catholic Church.

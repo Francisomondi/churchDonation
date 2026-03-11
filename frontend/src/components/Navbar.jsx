@@ -4,22 +4,27 @@ import { Link } from "react-router-dom";
 
 export default function Navbar({ onDonate, onRegister }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  
 
   return (
     <nav className="bg-white shadow-md border-b border-emerald-200">
       <div className="flex justify-between items-center px-6 py-4">
 
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <img
-            src="/church-logo.png"
-            alt="Church Logo"
-            className="h-10 w-10 object-contain"
-          />
-          <h1 className="text-xl font-bold text-emerald-700">
-            St. Mary’s Catholic Church
-          </h1>
-        </div>
+        <Link to={"/"}>
+          <div className="flex items-center gap-3">
+            <img
+              src="/church-logo.png"
+              alt="Church Logo"
+              className="h-10 w-10 object-contain"
+            />
+            <h1 className="text-xl font-bold text-emerald-700">
+              St. Mary’s Catholic Church
+            </h1>
+          </div>
+        </Link>
+        
+        
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex gap-8 text-gray-700 font-medium">
@@ -30,21 +35,26 @@ export default function Navbar({ onDonate, onRegister }) {
         </ul>
 
         {/* Desktop Buttons */}
-        <div className="hidden md:flex gap-3">
-          <button
-            onClick={onRegister}
-            className="border border-emerald-600 text-emerald-700 px-4 py-2 rounded hover:bg-emerald-50"
-          >
-            Register
-          </button>
+        
+            <div className="hidden md:flex gap-3">
+              <Link to="/register">
+                <button
+                  onClick={onRegister}
+                  className="border border-emerald-600 text-emerald-700 px-4 py-2 rounded hover:bg-emerald-50"
+                >
+                  Register
+                </button>
+              </Link>
 
-          <button
-            onClick={onDonate}
-            className="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700"
-          >
-            Donate
-          </button>
-        </div>
+              <button
+                onClick={onDonate}
+                className="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700"
+              >
+                Donate
+              </button>
+            </div>
+        
+        
 
         {/* Hamburger */}
         <button

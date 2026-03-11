@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <>
-      <Navbar onDonate={openDonate} />
+      
       <Hero onDonate={openDonate} />
       <MassCountdown />
       <FloatingDonate onDonate={openDonate} />
