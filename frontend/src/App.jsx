@@ -10,8 +10,9 @@ import Sermons from "./pages/Sermons";
 import Events from "./pages/Events";
 import Members from "./pages/Members";
 
+
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+
 import DonateModal from "./components/DonationModal";
 
 function App() {

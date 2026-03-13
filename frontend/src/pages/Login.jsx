@@ -10,19 +10,22 @@ const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const { Login, loading } = useUserStore();
+	const { Login, loading, user } = useUserStore();
 	  const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log(email, password);
 		const success = await Login({ email, password });
 		 
 			if (success) {
-				navigate("/admin");
-			}
+				if (user?.role === "admin") {
+					navigate("/admin");
+				} else {
+					navigate("/");
+				}
+				}
 		
-	};
+			};
 
 	return (
 		<div className='flex flex-col justify-center py-12 sm:px-6 lg:px-8'>

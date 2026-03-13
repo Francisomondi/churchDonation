@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import { UserPlus, Mail, Lock, User, ArrowRight, Loader } from "lucide-react";
 import { motion } from "framer-motion";
 import { useUserStore } from "../stores/useUserStore";
+import toast from "react-hot-toast";
 
 const Register = () => {
-  const loading = false
+  
   const [formData, setFormData] = useState({
 		name: "",
 		email: "",
@@ -13,12 +14,34 @@ const Register = () => {
     	phone: "",
 		confirmPassword: "",
 	});
-	const {register} = useUserStore()
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    register(formData)
+	const {register,loading} = useUserStore()
+	const navigate = useNavigate()
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (formData.password !== formData.confirmPassword) {
+    toast.error("Passwords do not match");
+    return; // stop execution here
   }
+
+  const { confirmPassword, ...userData } = formData;
+
+  const success = await register(userData);
+
+  if (success) {
+    toast.success("Account created successfully");
+
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      phone: "",
+      confirmPassword: "",
+    });
+
+    navigate("/login");
+  }
+ };
 
   return (
     <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">

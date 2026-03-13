@@ -12,12 +12,7 @@ export const useUserStore = create((set) => ({
     console.log("Sending data:", formData);
 
     set({ loading: true, error: null });
-
-    if (formData.password !== formData.confirmPassword) {
-      set({ loading: false });
-      return toast.error("Passwords do not match");
-    }
-
+    
     try {
       const response = await axios.post("/auth/register", {
         name: formData.name,
@@ -31,7 +26,8 @@ export const useUserStore = create((set) => ({
         loading: false,
       });
 
-      toast.success("Account created successfully!");
+      return true;
+     
     } catch (error) {
         console.log("REGISTER ERROR:", error.response?.data);
       const message = error.response?.data?.message || "Registration failed";
@@ -42,6 +38,7 @@ export const useUserStore = create((set) => ({
       });
 
       toast.error(message);
+      return false; 
     }
   },
   Login: async (credentials) => {
