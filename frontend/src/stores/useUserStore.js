@@ -1,37 +1,47 @@
- import {create} from 'zustand'
-import axios from '../../lib/axios'    
-import {toast} from 'react-hot-toast'
+import { create } from "zustand";
+import axios from "../../lib/axios";
+import { toast } from "react-hot-toast";
 
-export const useUserStore = create((set,get) => ({
-    user: null,
-    loading: false,
-    checkingAuth: true,
-    error: null,    
+export const useUserStore = create((set) => ({
+  user: null,
+  loading: false,
+  checkingAuth: true,
+  error: null,
 
-    register: async (name, email,phone, password, confirmPassword) => {
-        set({loading: true, error: null})
-        if (password !== confirmPassword) {
-                set({loading:false})
-                return toast.error("passwords do not match")
-            }
+  register: async (formData) => {
+    console.log("Sending data:", formData);
 
-        try {                   
-                 const response = await axios.post('/auth/register',
-                     { name, 
-                        email, 
-                        phone, 
-                        password, 
-                       
+    set({ loading: true, error: null });
 
-                     })
-            set({ user: response.data.user, loading: false })
-            toast.success('Account created successfully!')
-            }
-           
-     catch (error) {
-            set({ loading: false, error: error.response.data.message })
-            toast.error(error.response.data.message || 'Registration failed')
-        }
+    if (formData.password !== formData.confirmPassword) {
+      set({ loading: false });
+      return toast.error("Passwords do not match");
     }
 
-}))
+    try {
+      const response = await axios.post("/auth/register", {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+      });
+
+      set({
+        user: response.data.user,
+        loading: false,
+      });
+
+      toast.success("Account created successfully!");
+    } catch (error) {
+        console.log("REGISTER ERROR:", error.response?.data);
+      const message = error.response?.data?.message || "Registration failed";
+
+      set({
+        loading: false,
+        error: message,
+      });
+
+      toast.error(message);
+    }
+  },
+}));

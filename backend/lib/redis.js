@@ -1,21 +1,6 @@
 import Redis from "ioredis";
+import dotenv from "dotenv";
 
-let redis = null;
+dotenv.config();
 
-if (process.env.REDIS_URL) {
-  redis = new Redis(process.env.REDIS_URL, {
-    maxRetriesPerRequest: 1,
-  });
-
-  redis.on("connect", () => {
-    console.log("✅ Redis connected");
-  });
-
-  redis.on("error", (err) => {
-    console.log("❌ Redis error:", err.message);
-  });
-} else {
-  console.log("⚠️ Redis disabled (no REDIS_URL set)");
-}
-
-export default redis;
+export const redis = new Redis(process.env.UPSTASH_REDIS_URL);

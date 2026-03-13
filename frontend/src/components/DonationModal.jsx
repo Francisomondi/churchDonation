@@ -109,7 +109,7 @@ export default function DonateModal({ onClose, cause }) {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-2xl p-6 w-full max-w-md relative shadow-2xl"
+        className="bg-gray-900 rounded-2xl p-6 w-full max-w-md relative shadow-2xl"
       >
         {/* Close Button */}
         <button
@@ -157,7 +157,7 @@ export default function DonateModal({ onClose, cause }) {
                   key={amt}
                   type="button"
                   onClick={() => setForm({ ...form, amount: amt })}
-                  className="px-3 py-1 bg-gray-100 rounded-lg hover:bg-emerald-100 transition"
+                  className="px-3 py-1 bg-gray-600 rounded-lg hover:bg-emerald-100 transition"
                 >
                   {amt}
                 </button>
@@ -194,7 +194,7 @@ export default function DonateModal({ onClose, cause }) {
                   {history.map((donation) => (
                     <div
                       key={donation._id}
-                      className="flex justify-between text-sm bg-white p-2 rounded-lg shadow-sm"
+                      className="flex justify-between text-sm text-gray-600 p-2 rounded-lg shadow-sm"
                     >
                       <span>KES {donation.amount}</span>
                       <span className="text-gray-400">
