@@ -77,12 +77,14 @@ export default function Navbar({ onDonate, onRegister }) {
           </div>
 
           <div className="flex flex-col gap-3 pt-3">
-            <button
-              onClick={onRegister}
-              className="border border-emerald-600 text-emerald-700 px-4 py-2 rounded"
-            >
-              Register
-            </button>
+             <Link to="/register">
+                <button
+                  onClick={onRegister}
+                  className="w-full border border-emerald-600 text-emerald-700 px-4 py-2 rounded"
+                >
+                  Register
+                </button>
+            </Link>
 
             <button
               onClick={onDonate}
