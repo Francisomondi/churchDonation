@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-//import { FaBars } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 
 export default function Navbar({ onDonate, onRegister }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -61,7 +61,7 @@ export default function Navbar({ onDonate, onRegister }) {
           className="md:hidden text-emerald-700"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-        {/* <FaBars size={22} />*/}
+         <FaBars size={22} />
         </button>
       </div>
 

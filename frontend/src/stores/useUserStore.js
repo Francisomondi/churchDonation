@@ -44,4 +44,31 @@ export const useUserStore = create((set) => ({
       toast.error(message);
     }
   },
+  Login: async (credentials) => {
+    set({ loading: true, error: null });
+
+    try {
+      const response = await axios.post("/auth/login", credentials);
+        set({
+          user: response.data.user,
+          loading: false,
+        });
+
+        toast.success("Logged in successfully!");
+         return true; 
+        
+    } catch (error) {
+        console.log("LOGIN ERROR:", error.response?.data);
+        const message = error.response?.data?.message || "Login failed";
+
+      set({
+        loading: false,
+        error: message,
+      });
+
+      toast.error(message);
+    }
+
+  }
+
 }));

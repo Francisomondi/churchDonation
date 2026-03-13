@@ -19,10 +19,10 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const statsRes = await axiosInstance.get("/api/admin/dashboard");
+        const statsRes = await axiosInstance.get("/admin/dashboard");
         setStats(statsRes.data);
 
-        const ordersRes = await axiosInstance.get("/api/orders");
+        const ordersRes = await axiosInstance.get("/orders");
         setOrders(ordersRes.data);
       } catch (err) {
         console.error(err);
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
       <aside className="w-64 bg-white shadow-lg hidden md:block">
         <div className="p-6 border-b">
           <h2 className="text-xl font-bold text-emerald-600">
-            DNATION ADMIN
+            DONATION ADMIN
           </h2>
         </div>
 
@@ -82,7 +82,7 @@ export default function AdminDashboard() {
 
             {/* Chart */}
             <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-lg font-semibold mb-4">
+              <h2 className="text-lg text-emerald-600 font-semibold mb-4" >
                 Monthly Donations
               </h2>
 
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
                   {orders.map((order) => (
                     <tr
                       key={order._id}
-                      className="border-b hover:bg-gray-50 transition"
+                      className="border-b hover:bg-gray-50 transition text-gray-500"
                     >
                       <td className="p-3">{order.donorPhone}</td>
                       <td className="p-3 font-semibold">

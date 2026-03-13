@@ -2,19 +2,26 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LogIn, Mail, Lock, ArrowRight, Loader } from "lucide-react";
-//import { useUserStore } from "../stores/useUserStore";
+import { useUserStore } from "../stores/useUserStore";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-  const loading = false
 
-	//const { login, loading } = useUserStore();
+	const { Login, loading } = useUserStore();
+	  const navigate = useNavigate();
 
 	const handleSubmit = (e) => {
+		
 		e.preventDefault();
 		console.log(email, password);
-		login(email, password);
+		const result = Login({ email, password });
+
+		if (!result)
+		 navigate("/login");
+		else navigate("/admin");
+
 	};
 
 	return (
@@ -86,9 +93,9 @@ const Login = () => {
 							rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600
 							 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2
 							  focus:ring-emerald-500 transition duration-150 ease-in-out disabled:opacity-50'
-							disabled={loading}
+							disabled={false}
 						>
-							{loading ? (
+							{false ? (
 								<>
 									<Loader className='mr-2 h-5 w-5 animate-spin' aria-hidden='true' />
 									Loading...
@@ -104,7 +111,7 @@ const Login = () => {
 
 					<p className='mt-8 text-center text-sm text-gray-400'>
 						Not a member?{" "}
-						<Link to='/signup' className='font-medium text-emerald-400 hover:text-emerald-300'>
+						<Link to='/register' className='font-medium text-emerald-400 hover:text-emerald-300'>
 							Sign up now <ArrowRight className='inline h-4 w-4' />
 						</Link>
 					</p>
