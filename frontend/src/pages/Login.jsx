@@ -5,6 +5,7 @@ import { LogIn, Mail, Lock, ArrowRight, Loader } from "lucide-react";
 import { useUserStore } from "../stores/useUserStore";
 import { useNavigate } from "react-router-dom";
 
+
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -12,16 +13,15 @@ const Login = () => {
 	const { Login, loading } = useUserStore();
 	  const navigate = useNavigate();
 
-	const handleSubmit = (e) => {
-		
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		console.log(email, password);
-		const result = Login({ email, password });
-
-		if (!result)
-		 navigate("/login");
-		else navigate("/admin");
-
+		const success = await Login({ email, password });
+		 
+			if (success) {
+				navigate("/admin");
+			}
+		
 	};
 
 	return (
@@ -93,9 +93,9 @@ const Login = () => {
 							rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600
 							 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2
 							  focus:ring-emerald-500 transition duration-150 ease-in-out disabled:opacity-50'
-							disabled={false}
+							disabled={loading}
 						>
-							{false ? (
+							{loading ? (
 								<>
 									<Loader className='mr-2 h-5 w-5 animate-spin' aria-hidden='true' />
 									Loading...

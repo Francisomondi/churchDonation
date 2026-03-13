@@ -67,6 +67,7 @@ export const useUserStore = create((set) => ({
       });
 
       toast.error(message);
+      return false;
     }
 
   }
