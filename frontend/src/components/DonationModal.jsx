@@ -22,7 +22,7 @@ export default function DonateModal({ onClose, cause }) {
     if (form.phone.length >= 10) {
       try {
         const normalized = normalizePhone(form.phone);
-        const res = await axiosInstance.get(`/api/donation/history/${normalized}`);
+        const res = await axiosInstance.get(`/donation/history/${normalized}`);
         setHistory(res.data);
       } catch (err) {
         console.log("No history found");
@@ -39,7 +39,7 @@ export default function DonateModal({ onClose, cause }) {
     const interval = setInterval(async () => {
       try {
         const res = await axiosInstance.get(
-          `/api/donation/status/${checkoutID}`
+          `/donation/status/${checkoutID}`
         );
 
         if (res.data.status === "success") {
@@ -82,11 +82,11 @@ export default function DonateModal({ onClose, cause }) {
         phone: normalizePhone(form.phone),
       };
 
-     const res = await axiosInstance.post("/api/donation/stkpush", payload);
+     const res = await axiosInstance.post("/donation/stkpush", payload);
      setCheckoutID(res.data.data.CheckoutRequestID);
 
       toast.success("📲 STK Push sent! Check your phone.");
-      setSuccess(true); // ✅ show success screen
+      setSuccess(true); 
     } catch (err) {
       const msg =
         err.response?.data?.message || "Payment request failed. Please try again.";
