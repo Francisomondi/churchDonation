@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
+import { useUserStore } from "../stores/useUserStore"
 
 export default function Navbar({ onDonate, onRegister }) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+ const { user } = useUserStore();
   
 
   return (
@@ -36,15 +39,30 @@ export default function Navbar({ onDonate, onRegister }) {
 
         {/* Desktop Buttons */}
         
-            <div className="hidden md:flex gap-3">
-              <Link to="/register">
-                <button
-                  onClick={onRegister}
-                  className="border border-emerald-600 text-emerald-700 px-4 py-2 rounded hover:bg-emerald-50"
-                >
-                  Register
-                </button>
-              </Link>
+           <div className="hidden md:flex gap-3">
+
+              {!user && (
+                <>
+                  <Link to="/register">
+                    <button className="border border-emerald-600 text-emerald-700 px-4 py-2 rounded hover:bg-emerald-50">
+                      Register
+                    </button>
+                  </Link>
+
+                  <Link to="/login">
+                    <button className="border border-emerald-600 text-emerald-700 px-4 py-2 rounded">
+                      Login
+                    </button>
+                  </Link>
+                </>
+              )}
+              {user && (
+                <Link to="/dashboard">
+                  <button className="border border-emerald-600 text-emerald-700 px-4 py-2 rounded">
+                    Dashboard
+                  </button>
+                </Link>
+              )}
 
               <button
                 onClick={onDonate}
@@ -52,8 +70,9 @@ export default function Navbar({ onDonate, onRegister }) {
               >
                 Donate
               </button>
+
             </div>
-        
+                    
         
 
         {/* Hamburger */}
@@ -74,17 +93,25 @@ export default function Navbar({ onDonate, onRegister }) {
             <Link to="/sermons" className="hover:text-emerald-600">Sermons</Link>
             <Link to="/events" className="hover:text-emerald-600">Events</Link>
             <Link to="/members" className="hover:text-emerald-600">Members</Link>
+             
           </div>
 
           <div className="flex flex-col gap-3 pt-3">
-             <Link to="/register">
-                <button
-                  onClick={onRegister}
-                  className="w-full border border-emerald-600 text-emerald-700 px-4 py-2 rounded"
-                >
-                  Register
-                </button>
-            </Link>
+             {!user && (
+              <>
+                <Link to="/register">
+                  <button className="w-full border border-emerald-600 text-emerald-700 px-4 py-2 rounded">
+                    Member Register
+                  </button>
+                </Link>
+
+                <Link to="/login">
+                  <button className="w-full border border-emerald-600 text-emerald-700 px-4 py-2 rounded">
+                    Login
+                  </button>
+                </Link>
+              </>
+            )}
 
             <button
               onClick={onDonate}
