@@ -3,16 +3,15 @@ import axios from "../../lib/axios";
 import { toast } from "react-hot-toast";
 
 export const useUserStore = create((set) => ({
-  user: null,
+  user: JSON.parse(localStorage.getItem("user")) || null,
   loading: false,
-  checkingAuth: true,
+  checkingAuth: false,
   error: null,
 
+  // ✅ REGISTER
   register: async (formData) => {
-    console.log("Sending data:", formData);
-
     set({ loading: true, error: null });
-    
+
     try {
       const response = await axios.post("/auth/register", {
         name: formData.name,
@@ -21,15 +20,12 @@ export const useUserStore = create((set) => ({
         password: formData.password,
       });
 
-      set({
-        user: response.data.user,
-        loading: false,
-      });
+      set({ loading: false });
 
+      toast.success("Account created successfully!");
       return true;
-     
+
     } catch (error) {
-        console.log("REGISTER ERROR:", error.response?.data);
       const message = error.response?.data?.message || "Registration failed";
 
       set({
@@ -38,25 +34,32 @@ export const useUserStore = create((set) => ({
       });
 
       toast.error(message);
-      return false; 
+      return false;
     }
   },
+
+  // ✅ LOGIN
   Login: async (credentials) => {
     set({ loading: true, error: null });
 
     try {
       const response = await axios.post("/auth/login", credentials);
-        set({
-          user: response.data.user,
-          loading: false,
-        });
 
-        toast.success("Logged in successfully!");
-         return true; 
-        
+      const user = response.data.user;
+
+      // ✅ SAVE TO LOCAL STORAGE
+      localStorage.setItem("user", JSON.stringify(user));
+
+      set({
+        user,
+        loading: false,
+      });
+
+      toast.success("Logged in successfully!");
+      return true;
+
     } catch (error) {
-        console.log("LOGIN ERROR:", error.response?.data);
-        const message = error.response?.data?.message || "Login failed";
+      const message = error.response?.data?.message || "Login failed";
 
       set({
         loading: false,
@@ -65,10 +68,30 @@ export const useUserStore = create((set) => ({
 
       toast.error(message);
       return false;
-      
     }
-    
+  },
 
-  }
+  // ✅ LOGOUT
+  logout: () => {
+    localStorage.removeItem("user");
 
+    set({
+      user: null,
+    });
+
+    toast.success("Logged out successfully");
+  },
+
+  // ✅ CHECK AUTH (on app load)
+  checkAuth: () => {
+    set({ checkingAuth: true });
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      set({ user, checkingAuth: false });
+    } else {
+      set({ user: null, checkingAuth: false });
+    }
+  },
 }));
